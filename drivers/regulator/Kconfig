@@ -564,7 +564,11 @@ config REGULATOR_MAX1586
 	  This driver controls a Maxim 1586 or 1587 voltage output
 	  regulator via I2C bus. The provided regulator is suitable
 	  for PXA27x chips to control VCC_CORE and VCC_USIM voltages.
-
+ 
+config REGULATOR_MAX25221
+	tristate "Maxim MAX25221 Regulator Support"
+	depends on MFD_MAX25221
+	
 config REGULATOR_MAX5970
 	tristate "Maxim 5970/5978 power switch and monitor"
 	depends on I2C
