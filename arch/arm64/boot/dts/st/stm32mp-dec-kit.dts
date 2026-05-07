@@ -85,30 +85,6 @@
 		regulator-always-on;
 	};
 
-	reg_lvds_i2c_switch: regulator-lvds-i2c-switch {
-		compatible = "regulator-fixed";
-		regulator-name = "lvds_i2c_sw";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
-		gpio = <&pca9555_20 15 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-		regulator-always-on;
-		status = "okay";
-	};
-
-	reg_lvds_vdd_00314: regulator-lvds-vdd {
-		compatible = "regulator-fixed";
-		regulator-name = "lvds_vdd";
-		/* 00314 boosts 1.8 V input to 3.3 V output */
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		gpio = <&pca9555_20 5 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
-		regulator-always-on;
-		vin-supply = <&reg_lvds_i2c_switch>;
-		status = "okay";
-	};
-
 	reg_pcie_pwren: regulator-pcie-pwren {
 		compatible = "regulator-fixed";
 		regulator-name = "pcie-pwren";
@@ -177,10 +153,6 @@
 			bus-type = <4>;
 		};
 	};
-};
-
-&dsi {
-	status = "okay";
 };
 
 &eth1 {
@@ -653,18 +625,6 @@
 		};
 	};
 
-	pinctrl_dsi_touchscreen: pinctrl_dsi_touchscreen-0 {
-		pins {
-			pinmux = <STM32_PINMUX('B', 3, GPIO)>; /* DSICT_nINT */
-		};
-	};
-
-	pinctrl_lvds_touchscreen: pinctrl_lvds_touchscreen-0 {
-		pins {
-			pinmux = <STM32_PINMUX('B', 6, GPIO)>; /* LVDSCT_nINT */
-		};
-	};
-
 	ptn5110_51_pins: ptn5110_51_pins-0 {
 		pins {
 			pinmux = <STM32_PINMUX('G', 15, GPIO)>; /* USB_A_nALERT_1V8 */
@@ -749,21 +709,6 @@
 			pinmux = <STM32_PINMUX('D', 4, ANALOG)>,
 				 <STM32_PINMUX('D', 6, ANALOG)>,
 				 <STM32_PINMUX('D', 7, ANALOG)>;
-		};
-	};
-
-	tim10_pwm_pins_mx: tim10_pwm_mx-0 {
-		pins {
-			pinmux = <STM32_PINMUX('B', 9, AF9)>;
-			bias-disable;
-			drive-push-pull;
-			slew-rate = <0>;
-		};
-	};
-
-	tim10_pwm_sleep_pins_mx: tim10_pwm_sleep_mx-0 {
-		pins {
-			pinmux = <STM32_PINMUX('B', 9, ANALOG)>;
 		};
 	};
 
@@ -930,13 +875,6 @@
 	pinctrl-names = "default", "sleep";
 	pinctrl-0 = <&spi4_pins_mx>;
 	pinctrl-1 = <&spi4_sleep_pins_mx>;
-	status = "okay";
-};
-
-&timers10 {
-	pinctrl-names = "default", "sleep";
-	pinctrl-0 = <&tim10_pwm_pins_mx>;
-	pinctrl-1 = <&tim10_pwm_sleep_pins_mx>;
 	status = "okay";
 };
 
