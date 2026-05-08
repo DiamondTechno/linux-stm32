@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) 2026 Diamond Technologies
+ *
+ * Diamond Technologies STM32MP257F DEC Kit, headless configuration.
+ *
+ * Disables the display rendering path (GPU + DSI controller) on top of
+ * the base kit DTS, which already has &ltdc and &lvds disabled. Camera
+ * (IMX335 + CSI/DCMIPP) and video codecs (&vdec, &venc) remain enabled
+ * because they are useful for headless inference/streaming workloads.
+ * If you don't need them either, override their status to "disabled" in
+ * a derived DTS or a board-specific overlay.
+ */
+
+/dts-v1/;
+
+#include "stm32mp-dec-kit.dts"
+
+/ {
+	model = "Diamond Technologies STM32MP257F DEC Kit (headless)";
+};
+
+&gpu {
+	status = "disabled";
+};
+
+&dsi {
+	status = "disabled";
+};
