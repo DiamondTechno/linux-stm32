@@ -1341,7 +1341,20 @@ static void stm32_usart_break_ctl(struct uart_port *port, int break_state)
 	const struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
 	unsigned long flags;
 
-	pm_runtime_get(port->dev);
+	/*
+	 * pm_runtime_get() only requests an async resume and returns
+	 * immediately - it does not wait for the clock/power domain to
+	 * actually come back up. If this port has already autosuspended,
+	 * the register write below can then race a still-in-progress
+	 * resume and hit an unclocked peripheral, causing a synchronous
+	 * external abort. This has been observed triggered from
+	 * btnxpuart's power-save workqueue calling serdev_device_break_ctl()
+	 * asynchronously, with no other guarantee the port is already
+	 * resumed. Use the blocking variant so the register write only
+	 * happens once the device is confirmed active.
+	 */
+	if (pm_runtime_resume_and_get(port->dev) < 0)
+		return;
 
 	spin_lock_irqsave(&port->lock, flags);
 
