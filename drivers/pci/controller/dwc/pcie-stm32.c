@@ -79,11 +79,11 @@ static int stm32_pcie_start_link(struct dw_pcie *pci)
 
 	if (stm32_pcie->reset_gpio) {
 		/* Make sure PERST# is asserted. */
-		gpiod_set_value(stm32_pcie->reset_gpio, 1);
+		gpiod_set_value_cansleep(stm32_pcie->reset_gpio, 1);
 
 		/* Deassert PERST# after 100us */
 		usleep_range(100, 200);
-		gpiod_set_value(stm32_pcie->reset_gpio, 0);
+		gpiod_set_value_cansleep(stm32_pcie->reset_gpio, 0);
 	}
 
 	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
@@ -108,7 +108,7 @@ static void stm32_pcie_stop_link(struct dw_pcie *pci)
 
 	/* Assert PERST# */
 	if (stm32_pcie->reset_gpio)
-		gpiod_set_value(stm32_pcie->reset_gpio, 1);
+		gpiod_set_value_cansleep(stm32_pcie->reset_gpio, 1);
 }
 
 static int stm32_pcie_suspend(struct device *dev)
