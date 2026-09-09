@@ -639,7 +639,18 @@ static int tcpci_init(struct tcpc_dev *tcpc)
 
 	reg = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_FAILED |
 		TCPC_ALERT_TX_DISCARDED | TCPC_ALERT_RX_STATUS |
-		TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_CC_STATUS;
+		TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_CC_STATUS |
+		/*
+		 * These are legitimately raised by a host doing active
+		 * USB-PD negotiation and are already cleared by the
+		 * unconditional write-back in tcpci_irq() regardless of
+		 * this mask - include them so that clearing is also
+		 * recognized as IRQ_HANDLED, instead of eventually
+		 * tripping the spurious-IRQ disable on this line.
+		 */
+		TCPC_ALERT_FAULT | TCPC_ALERT_VBUS_DISCNCT |
+		TCPC_ALERT_RX_BUF_OVF | TCPC_ALERT_V_ALARM_LO |
+		TCPC_ALERT_V_ALARM_HI;
 	if (tcpci->controls_vbus)
 		reg |= TCPC_ALERT_POWER_STATUS;
 	/* Enable VSAFE0V status interrupt when detecting VSAFE0V is supported */
