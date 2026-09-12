@@ -180,13 +180,16 @@
 		};
 	};
 
-	/* WLAN power-enable rail for IW610 (gated by GPIOB1) */
+	/*
+	 * WLAN power-enable rail for IW610 (WLAN_EN, really IW610_nRST).
+	 * Rev 02 SOM: PG8. PB1 is now one of the BOARD_ID0-3 straps.
+	 */
 	reg_sdmmc3_vmmc: regulator-sdmmc3 {
 		compatible = "regulator-fixed";
 		regulator-name = "WLAN_EN";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
-		gpio = <&gpiob 1 GPIO_ACTIVE_HIGH>;
+		gpio = <&gpiog 8 GPIO_ACTIVE_HIGH>;
 		startup-delay-us = <20000>;
 		enable-active-high;
 	};
@@ -489,6 +492,10 @@
 	scmi_vdd3v3_usb: regulator@20 {
 		reg = <VOLTD_SCMI_STPMIC2_LDO4>;
 		regulator-name = "vdd3v3_usb";
+	};
+	scmi_vdd_sdcard: regulator@22 {
+		reg = <VOLTD_SCMI_STPMIC2_LDO7>;
+		regulator-name = "vdd_sdcard";
 	};
 };
 
